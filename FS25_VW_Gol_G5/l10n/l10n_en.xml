@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="shopItem_golG5" text="Gol G5"/>
+        <text name="typeDesc_golG5" text="Compact Hatchback"/>
+        <text name="function_golG5" text="Compact Brazilian hatchback with EA111 VHT engine options, factory Volkswagen colors, and light trailer hitch."/>
+        <text name="configuration_motor_10vht" text="1.0 VHT (76 hp)"/>
+        <text name="configuration_motor_16vht" text="1.6 VHT (104 hp)"/>
+        <text name="configuration_motor_16stage1" text="1.6 VHT Stage 1 ME7.5.30 (125 hp)"/>
+        <text name="info_transmission_manual" text="Manual 5-Speed (MQ200)"/>
+        <text name="color_vwNinjaBlack" text="Ninja Black"/>
+        <text name="color_vwCrystalWhite" text="Crystal White"/>
+        <text name="color_vwSiriusSilver" text="Sirius Silver"/>
+        <text name="color_vwSpectrusGray" text="Spectrus Gray"/>
+        <text name="color_vwFlashRed" text="Flash Red"/>
+        <text name="color_vwBorealBlue" text="Boreal Blue"/>
+    </texts>
+</l10n>

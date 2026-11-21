@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="92">
+    <author>Rodrigo Schmitt de Almeida</author>
+    <version>1.0.0.0</version>
+
+    <title>
+        <en>Volkswagen Gol G5</en>
+        <br>Volkswagen Gol G5</br>
+    </title>
+
+    <description>
+        <en><![CDATA[Volkswagen Gol G5 (2009-2012) for Farming Simulator 25.
+
+Features:
+- Detailed 3D exterior and interior with steering wheel animation and character IK targets
+- 3 EA111 VHT engine options: 1.0 VHT (76 hp), 1.6 VHT (104 hp), and 1.6 VHT Stage 1 ME7.5.30 (125 hp)
+- 6 factory Volkswagen paint colors (Ninja Black, Crystal White, Sirius Silver, Spectrus Gray, Flash Red, Boreal Blue)
+- Working headlights, high beams, brake lights, and reverse lights
+- Rear trailer hitch (trailerCar) and 55 L fuel tank]]></en>
+        <br><![CDATA[Volkswagen Gol G5 (2009-2012) para Farming Simulator 25.
+
+Recursos:
+- Modelo 3D detalhado (exterior e interior) com volante animado e alvos IK para o motorista
+- 3 motorizacoes EA111 VHT: 1.0 VHT (76 cv), 1.6 VHT (104 cv) e 1.6 VHT Stage 1 ME7.5.30 (125 cv)
+- 6 cores originais Volkswagen (Preto Ninja, Branco Cristal, Prata Sirius, Cinza Spectrus, Vermelho Flash e Azul Boreal)
+- Farois baixos/altos, luzes de freio e luz de re funcionais
+- Engate traseiro para reboque (trailerCar) e tanque de 55 L]]></br>
+    </description>
+
+    <iconFilename>icon_golG5.dds</iconFilename>
+    <multiplayer supported="true"/>
+    <l10n filenamePrefix="l10n/l10n"/>
+
+    <brands>
+        <brand name="VOLKSWAGEN" title="Volkswagen" image="brand_vw.dds"/>
+    </brands>
+
+    <storeItems>
+        <storeItem xmlFilename="vehicles/vwGolG5/golG5.xml"/>
+    </storeItems>
+</modDesc>

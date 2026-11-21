@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<vehicle type="car" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://validation.gdn.giants-software.com/xml/fs25/vehicle.xsd">
+    <annotation>Volkswagen Gol G5 (2009-2012) - Rodrigo Schmitt de Almeida</annotation>
+
+    <storeData>
+        <name>$l10n_shopItem_golG5</name>
+        <specs>
+            <power>76</power>
+            <maxSpeed>165</maxSpeed>
+        </specs>
+        <functions>
+            <function>$l10n_function_golG5</function>
+        </functions>
+        <image>store_golG5.dds</image>
+        <price>14500</price>
+        <lifetime>600</lifetime>
+        <rotation>0</rotation>
+        <brand>VOLKSWAGEN</brand>
+        <species>VEHICLE</species>
+        <category>carsBikes</category>
+        <canBeSold>true</canBeSold>
+        <showInStore>true</showInStore>
+        <allowLeasing>true</allowLeasing>
+    </storeData>
+
+    <base>
+        <typeDesc>$l10n_typeDesc_golG5</typeDesc>
+        <filename>vehicles/vwGolG5/golG5.i3d</filename>
+        <size width="2.15" length="4.40" height="1.85"/>
+        <components numComponents="1">
+            <component index="1" centerOfMass="0 0.45 0.15" mass="1010" inertiaScale="1 1 1" solverIterationCount="10" motorized="true"/>
+        </components>
+        <mapHotspot type="CAR"/>
+        <supportsRadio>true</supportsRadio>
+        <canBeReset>true</canBeReset>
+    </base>
+
+    <wheels>
+        <wheelConfigurations>
+            <wheelConfiguration name="$l10n_configuration_valueDefault" price="0">
+                <wheels autoRotateBackSpeed="2.4" hasSurfaceSounds="true">
+                    <wheel isLeft="true" hasTireTracks="true" hasParticles="true">
+                        <physics repr="wheelFrontLeftRepr" driveNode="wheelFrontLeftDrive" rotSpeed="1" restLoad="0.32" radius="0.3526" width="0.21" mass="0.025" initialCompression="20" suspTravel="0.14" spring="28" damper="3.5" frictionScale="1.6" rotMin="-32" rotMax="32" tireType="street"/>
+                    </wheel>
+                    <wheel isLeft="false" hasTireTracks="true" hasParticles="true">
+                        <physics repr="wheelFrontRightRepr" driveNode="wheelFrontRightDrive" rotSpeed="1" restLoad="0.32" radius="0.3526" width="0.21" mass="0.025" initialCompression="20" suspTravel="0.14" spring="28" damper="3.5" frictionScale="1.6" rotMin="-32" rotMax="32" tireType="street"/>
+                    </wheel>
+                    <wheel isLeft="true" hasTireTracks="true" hasParticles="true">
+                        <physics repr="wheelBackLeft" rotSpeed="0" restLoad="0.22" radius="0.3526" width="0.21" mass="0.025" initialCompression="18" suspTravel="0.15" spring="24" damper="3.0" frictionScale="1.6" tireType="street"/>
+                    </wheel>
+                    <wheel isLeft="false" hasTireTracks="true" hasParticles="true">
+                        <physics repr="wheelBackRight" rotSpeed="0" restLoad="0.22" radius="0.3526" width="0.21" mass="0.025" initialCompression="18" suspTravel="0.15" spring="24" damper="3.0" frictionScale="1.6" tireType="street"/>
+                    </wheel>
+                </wheels>
+            </wheelConfiguration>
+        </wheelConfigurations>
+    </wheels>
+
+    <lights>
+        <states>
+            <state lightTypes="0"/>
+            <state lightTypes="0 3"/>
+        </states>
+
+        <realLights>
+            <low>
+                <light node="frontLightLow" lightTypes="0"/>
+            </low>
+            <high>
+                <light node="frontLightLow" lightTypes="0"/>
+                <light node="frontLightHigh" lightTypes="3"/>
+                <brakeLight node="backLightsHigh1"/>
+                <reverseLight node="reverseLightHigh1"/>
+            </high>
+        </realLights>
+
+        <defaultLights>
+            <defaultLight shaderNode="headlight_l" lightTypes="0 3" intensity="25"/>
+            <defaultLight shaderNode="headlight_r" lightTypes="0 3" intensity="25"/>
+        </defaultLights>
+
+        <brakeLights>
+            <brakeLight shaderNode="brakelight_l" intensity="25"/>
+            <brakeLight shaderNode="brakelight_m" intensity="25"/>
+            <brakeLight shaderNode="brakelight_r" intensity="25"/>
+        </brakeLights>
+
+        <reverseLights>
+            <reverseLight shaderNode="reversinglight_l" intensity="25"/>
+            <reverseLight shaderNode="reversinglight_r" intensity="25"/>
+        </reverseLights>
+    </lights>
+
+    <enterable>
+        <exitPoint node="exitPoint"/>
+        <enterReferenceNode node="golG5_main_component1"/>
+
+        <cameras>
+            <camera node="outdoorCamera1" rotatable="true" rotateNode="outdoorCameraTarget" limit="true" rotMinX="-1.1" rotMaxX="0.4" transMin="3.2" transMax="18" isInside="false" useWorldXZRotation="true">
+                <raycastNode node="cameraRaycastNode1"/>
+                <raycastNode node="cameraRaycastNode2"/>
+                <raycastNode node="cameraRaycastNode3"/>
+            </camera>
+            <camera node="indoorCamera" rotatable="true" limit="true" rotMinX="-0.7" rotMaxX="0.7" transMin="0" transMax="0" isInside="true" allowHeadTracking="true"/>
+        </cameras>
+
+        <characterNode node="playerSkin" cameraMinDistance="0.5">
+            <target ikChain="rightFoot" targetNode="playerRightFootTarget"/>
+            <target ikChain="leftFoot" targetNode="playerLeftFootTarget"/>
+            <target ikChain="rightArm" targetNode="playerRightHandTarget"/>
+            <target ikChain="leftArm" targetNode="playerLeftHandTarget"/>
+        </characterNode>
+    </enterable>
+
+    <motorized>
+        <consumerConfigurations>
+            <consumerConfiguration>
+                <consumer fillUnitIndex="1" usage="12" fillType="DIESEL"/>
+            </consumerConfiguration>
+        </consumerConfigurations>
+
+        <differentialConfigurations>
+            <differentialConfiguration>
+                <differentials>
+                    <differential torqueRatio="0.5" maxSpeedRatio="1.8" wheelIndex1="1" wheelIndex2="2"/>
+                </differentials>
+            </differentialConfiguration>
+        </differentialConfigurations>
+
+        <motorConfigurations>
+            <motorConfiguration name="$l10n_configuration_motor_10vht" hp="76" maxSpeed="165" price="0" isDefault="true">
+                <motor torqueScale="0.14" minRpm="850" maxRpm="6200" maxForwardSpeed="165" maxBackwardSpeed="35" brakeForce="2.2" lowBrakeForceScale="0.22" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.25">
+                    <torque normRpm="0.2" torque="0.65"/>
+                    <torque normRpm="0.4" torque="0.88"/>
+                    <torque normRpm="0.6" torque="1.00"/>
+                    <torque normRpm="0.8" torque="0.96"/>
+                    <torque normRpm="0.95" torque="0.82"/>
+                    <torque normRpm="1.0" torque="0.68"/>
+                </motor>
+                <transmission axleRatio="4.78" name="$l10n_info_transmission_manual">
+                    <directionChange useGear="true" useGroup="false" changeTime="0.4"/>
+                    <forwardGear gearRatio="3.45" name="1"/>
+                    <forwardGear gearRatio="1.95" name="2"/>
+                    <forwardGear gearRatio="1.28" name="3"/>
+                    <forwardGear gearRatio="0.97" name="4"/>
+                    <forwardGear gearRatio="0.79" name="5"/>
+                    <backwardGear gearRatio="3.18" name="R"/>
+                </transmission>
+            </motorConfiguration>
+
+            <motorConfiguration name="$l10n_configuration_motor_16vht" hp="104" maxSpeed="190" price="3800">
+                <motor torqueScale="0.19" minRpm="850" maxRpm="6200" maxForwardSpeed="190" maxBackwardSpeed="40" brakeForce="2.5" lowBrakeForceScale="0.22" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.25">
+                    <torque normRpm="0.2" torque="0.72"/>
+                    <torque normRpm="0.4" torque="0.95"/>
+                    <torque normRpm="0.6" torque="1.00"/>
+                    <torque normRpm="0.8" torque="0.94"/>
+                    <torque normRpm="0.95" torque="0.80"/>
+                    <torque normRpm="1.0" torque="0.66"/>
+                </motor>
+                <transmission axleRatio="4.06" name="$l10n_info_transmission_manual">
+                    <directionChange useGear="true" useGroup="false" changeTime="0.4"/>
+                    <forwardGear gearRatio="3.45" name="1"/>
+                    <forwardGear gearRatio="1.95" name="2"/>
+                    <forwardGear gearRatio="1.28" name="3"/>
+                    <forwardGear gearRatio="0.93" name="4"/>
+                    <forwardGear gearRatio="0.75" name="5"/>
+                    <backwardGear gearRatio="3.18" name="R"/>
+                </transmission>
+            </motorConfiguration>
+
+            <motorConfiguration name="$l10n_configuration_motor_16stage1" hp="125" maxSpeed="208" price="6500">
+                <motor torqueScale="0.23" minRpm="900" maxRpm="6500" maxForwardSpeed="208" maxBackwardSpeed="45" brakeForce="2.9" lowBrakeForceScale="0.22" lowBrakeForceSpeedLimit="1" rotInertia="0.0011" dampingRateScale="0.22">
+                    <torque normRpm="0.2" torque="0.76"/>
+                    <torque normRpm="0.4" torque="0.97"/>
+                    <torque normRpm="0.6" torque="1.00"/>
+                    <torque normRpm="0.8" torque="0.98"/>
+                    <torque normRpm="0.95" torque="0.89"/>
+                    <torque normRpm="1.0" torque="0.75"/>
+                </motor>
+                <transmission axleRatio="4.06" name="$l10n_info_transmission_manual">
+                    <directionChange useGear="true" useGroup="false" changeTime="0.35"/>
+                    <forwardGear gearRatio="3.45" name="1"/>
+                    <forwardGear gearRatio="1.95" name="2"/>
+                    <forwardGear gearRatio="1.25" name="3"/>
+                    <forwardGear gearRatio="0.91" name="4"/>
+                    <forwardGear gearRatio="0.73" name="5"/>
+                    <backwardGear gearRatio="3.18" name="R"/>
+                </transmission>
+            </motorConfiguration>
+        </motorConfigurations>
+
+        <exhaustEffects>
+            <exhaustEffect node="exhaustParticle" filename="$data/effects/exhaust/exhaust.i3d" minRpmColor="0.9 0.9 0.9 0.05" maxRpmColor="0.8 0.8 0.8 0.25" minRpmScale="0.03" maxRpmScale="0.18"/>
+        </exhaustEffects>
+    </motorized>
+
+    <drivable>
+        <steeringWheel node="steeringWheel" indoorRotation="540" outdoorRotation="50"/>
+        <cruiseControl minSpeed="5" maxSpeed="208" enabled="true"/>
+    </drivable>
+
+    <fillUnit>
+        <fillUnitConfigurations>
+            <fillUnitConfiguration>
+                <fillUnits>
+                    <fillUnit fillTypes="DIESEL" capacity="55" startFillLevel="55" startFillType="DIESEL" showOnHud="true" showInShop="true"/>
+                </fillUnits>
+            </fillUnitConfiguration>
+        </fillUnitConfigurations>
+    </fillUnit>
+
+    <honk>
+        <sound template="HONK_PICKUP" linkNode="golG5_main_component1"/>
+    </honk>
+
+    <attacherJoints>
+        <attacherJoint node="trailerAttacherJointBackLow" jointType="trailerCar" lowerRotLimit="25 75 50" upperRotationOffset="0" allowsJointLimitMovement="false" canTurnOnImplement="false"/>
+    </attacherJoints>
+
+    <baseColorConfigurations useDefaultColors="false" defaultColorIndex="0">
+        <material materialSlotName="carPaint"/>
+        <baseColorConfiguration name="$l10n_color_vwNinjaBlack" color="0.015 0.016 0.020" price="0" isDefault="true"/>
+        <baseColorConfiguration name="$l10n_color_vwCrystalWhite" color="0.90 0.91 0.92" price="500"/>
+        <baseColorConfiguration name="$l10n_color_vwSiriusSilver" color="0.58 0.60 0.63" price="750" isMetallic="true"/>
+        <baseColorConfiguration name="$l10n_color_vwSpectrusGray" color="0.20 0.22 0.24" price="750" isMetallic="true"/>
+        <baseColorConfiguration name="$l10n_color_vwFlashRed" color="0.68 0.02 0.02" price="600"/>
+        <baseColorConfiguration name="$l10n_color_vwBorealBlue" color="0.03 0.14 0.36" price="750" isMetallic="true"/>
+    </baseColorConfigurations>
+
+    <i3dMappings>
+        <i3dMapping id="golG5_main_component1" node="0>"/>
+        <i3dMapping id="wheelFrontLeftRepr" node="0>0|0"/>
+        <i3dMapping id="wheelFrontLeftDrive" node="0>0|0|0"/>
+        <i3dMapping id="wheelFrontRightRepr" node="0>0|1"/>
+        <i3dMapping id="wheelFrontRightDrive" node="0>0|1|0"/>
+        <i3dMapping id="wheelBackLeft" node="0>0|2"/>
+        <i3dMapping id="wheelBackRight" node="0>0|3"/>
+        <i3dMapping id="outdoorCameraTarget" node="0>1|0"/>
+        <i3dMapping id="outdoorCamera1" node="0>1|0|0"/>
+        <i3dMapping id="indoorCamera" node="0>1|1"/>
+        <i3dMapping id="cameraRaycastNode1" node="0>1|2"/>
+        <i3dMapping id="cameraRaycastNode2" node="0>1|3"/>
+        <i3dMapping id="cameraRaycastNode3" node="0>1|4"/>
+        <i3dMapping id="frontLightLow" node="0>2|0|0"/>
+        <i3dMapping id="frontLightHigh" node="0>2|0|1"/>
+        <i3dMapping id="backLightsHigh1" node="0>2|0|2"/>
+        <i3dMapping id="reverseLightHigh1" node="0>2|0|3"/>
+        <i3dMapping id="headlight_l" node="0>2|1|0"/>
+        <i3dMapping id="headlight_r" node="0>2|1|1"/>
+        <i3dMapping id="luxfarol" node="0>2|1|2"/>
+        <i3dMapping id="brakelight_l" node="0>2|1|3"/>
+        <i3dMapping id="brakelight_m" node="0>2|1|4"/>
+        <i3dMapping id="brakelight_r" node="0>2|1|5"/>
+        <i3dMapping id="reversinglight_l" node="0>2|1|6"/>
+        <i3dMapping id="reversinglight_r" node="0>2|1|7"/>
+        <i3dMapping id="lanternada" node="0>2|1|8"/>
+        <i3dMapping id="exitPoint" node="0>3|0"/>
+        <i3dMapping id="playerSkin" node="0>3|1"/>
+        <i3dMapping id="playerRightFootTarget" node="0>3|2"/>
+        <i3dMapping id="playerLeftFootTarget" node="0>3|3"/>
+        <i3dMapping id="steeringWheelBase" node="0>3|4"/>
+        <i3dMapping id="steeringWheel" node="0>3|4|0"/>
+        <i3dMapping id="playerRightHandTarget" node="0>3|4|0|0"/>
+        <i3dMapping id="playerLeftHandTarget" node="0>3|4|0|1"/>
+        <i3dMapping id="trailerAttacherJointBackLow" node="0>4|0"/>
+        <i3dMapping id="exhaustParticle" node="0>5|0"/>
+    </i3dMappings>
+</vehicle>

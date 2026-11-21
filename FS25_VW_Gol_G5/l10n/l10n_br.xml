@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="shopItem_golG5" text="Gol G5"/>
+        <text name="typeDesc_golG5" text="Hatch Compacto"/>
+        <text name="function_golG5" text="Hatch compacto brasileiro com opcoes de motorizacao EA111 VHT, paleta original Volkswagen e engate traseiro leve."/>
+        <text name="configuration_motor_10vht" text="1.0 VHT (76 cv)"/>
+        <text name="configuration_motor_16vht" text="1.6 VHT (104 cv)"/>
+        <text name="configuration_motor_16stage1" text="1.6 VHT Stage 1 ME7.5.30 (125 cv)"/>
+        <text name="info_transmission_manual" text="Manual 5 Marchas (MQ200)"/>
+        <text name="color_vwNinjaBlack" text="Preto Ninja"/>
+        <text name="color_vwCrystalWhite" text="Branco Cristal"/>
+        <text name="color_vwSiriusSilver" text="Prata Sirius"/>
+        <text name="color_vwSpectrusGray" text="Cinza Spectrus"/>
+        <text name="color_vwFlashRed" text="Vermelho Flash"/>
+        <text name="color_vwBorealBlue" text="Azul Boreal"/>
+    </texts>
+</l10n>

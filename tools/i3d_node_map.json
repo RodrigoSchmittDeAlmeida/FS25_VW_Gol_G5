@@ -1,0 +1,61 @@
+{
+  "nodes": {
+    "golG5_main_component1": "0>",
+    "wheelFrontLeftRepr": "0>0|0",
+    "wheelFrontLeftDrive": "0>0|0|0",
+    "wheelFrontRightRepr": "0>0|1",
+    "wheelFrontRightDrive": "0>0|1|0",
+    "wheelBackLeft": "0>0|2",
+    "wheelBackRight": "0>0|3",
+    "outdoorCameraTarget": "0>1|0",
+    "outdoorCamera1": "0>1|0|0",
+    "indoorCamera": "0>1|1",
+    "cameraRaycastNode1": "0>1|2",
+    "cameraRaycastNode2": "0>1|3",
+    "cameraRaycastNode3": "0>1|4",
+    "frontLightLow": "0>2|0|0",
+    "frontLightHigh": "0>2|0|1",
+    "backLightsHigh1": "0>2|0|2",
+    "reverseLightHigh1": "0>2|0|3",
+    "headlight_l": "0>2|1|0",
+    "headlight_r": "0>2|1|1",
+    "luxfarol": "0>2|1|2",
+    "brakelight_l": "0>2|1|3",
+    "brakelight_m": "0>2|1|4",
+    "brakelight_r": "0>2|1|5",
+    "reversinglight_l": "0>2|1|6",
+    "reversinglight_r": "0>2|1|7",
+    "lanternada": "0>2|1|8",
+    "exitPoint": "0>3|0",
+    "playerSkin": "0>3|1",
+    "playerRightFootTarget": "0>3|2",
+    "playerLeftFootTarget": "0>3|3",
+    "steeringWheelBase": "0>3|4",
+    "steeringWheel": "0>3|4|0",
+    "playerRightHandTarget": "0>3|4|0|0",
+    "playerLeftHandTarget": "0>3|4|0|1",
+    "trailerAttacherJointBackLow": "0>4|0",
+    "exhaustParticle": "0>5|0"
+  },
+  "stats": {
+    "source_glb": "source_assets/gol_g5.glb",
+    "total_glb_nodes": 37,
+    "total_shapes": 36,
+    "total_materials": 19,
+    "total_textures": 6,
+    "total_vertices": 155693,
+    "total_triangles": 112342,
+    "unique_shape_vertices": 113321,
+    "unique_shape_triangles": 90094,
+    "bbox_fs25_min": [
+      -1.075652,
+      0.0,
+      -2.115355
+    ],
+    "bbox_fs25_max": [
+      1.067943,
+      1.847291,
+      2.246711
+    ]
+  }
+}

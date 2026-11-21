@@ -1,0 +1,6 @@
+GOLG5_FS25_PROJETO_COMPLETO.md
+.agents/
+source_assets/
+dist/
+__pycache__/
+*.pyc
