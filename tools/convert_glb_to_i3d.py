@@ -74,10 +74,9 @@ VISUAL_NODES = [
 INVERTED_PRIMITIVES: dict[str, set[int]] = {
     "bonnet": {0},
     "bumper_f": {1},
-    "door_dside_f": {0, 1, 2, 4, 5},
-    "door_pside_f": {0, 1, 2, 4, 5},
-    "door_dside_r": {0, 1, 3, 4},
-    "door_pside_r": {3, 4},
+    "door_dside_f": {0, 1},
+    "door_pside_f": {0, 1},
+    "door_dside_r": {0, 1},
 }
 
 
@@ -241,7 +240,7 @@ def build_box_shape(
 
 
 def build_materials_xml(gltf: dict[str, Any]) -> list[str]:
-    """Build <Materials> section (materialId 1..19) matching Contract Section 2.2."""
+    """Build <Materials> section (materialId 1..19) using FS25 PBR vehicleShader detail textures."""
     lines = [
         '    <Material name="Mat_Collision_Default" materialId="1" diffuseColor="0.5 0.5 0.5 1" specularColor="0.2 0.2 0"/>'
     ]
@@ -254,40 +253,215 @@ def build_materials_xml(gltf: dict[str, Any]) -> list[str]:
         spec = f"{1.0 - rough:.6g} {metal:.6g} 0"
 
         if name == "Mat_CarPaint_Black":
-            # FS25 baseColorConfigurations matches <material materialSlotName="carPaint"/> to <Material name="carPaint">
-            lines.append(
-                f'    <Material name="carPaint" materialId="{mat_id}" '
-                f'diffuseColor="0.015 0.016 0.02 1" specularColor="{spec}" customShaderId="7">'
+            lines.extend(
+                [
+                    f'    <Material name="carPaint" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="13"/>',
+                    '      <CustomParameter name="clearCoatIntensity" value="0.85"/>',
+                    '      <CustomParameter name="clearCoatSmoothness" value="0.95"/>',
+                    '      <CustomParameter name="smoothnessScale" value="1.0"/>',
+                    '      <CustomParameter name="colorScale" value="0.008 0.009 0.011"/>',
+                    "    </Material>",
+                ]
             )
-            lines.append('      <CustomParameter name="colorScale" value="0.015 0.016 0.020 1"/>')
-            lines.append("    </Material>")
+        elif name in {"Mat_Chrome_Reflector", "Mat_Chrome_Trim"}:
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="16"/>',
+                    '      <CustomParameter name="smoothnessScale" value="1.0"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name in {"Mat_Alloy_Rim", "Mat_Brake_Disc"}:
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="17"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="18"/>',
+                    '      <CustomParameter name="clearCoatIntensity" value="0.5"/>',
+                    '      <CustomParameter name="clearCoatSmoothness" value="0.85"/>',
+                    '      <CustomParameter name="colorScale" value="0.74 0.75 0.77"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name in {"Mat_Trim_Black", "Mat_Headlight_Mask_Black"}:
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="19"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="20"/>',
+                    '      <CustomParameter name="colorScale" value="0.025 0.027 0.030"/>',
+                    '      <CustomParameter name="smoothnessScale" value="0.85"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name == "Mat_Tire_Rubber":
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="21"/>',
+                    '      <Custommap name="detailNormal" fileId="22"/>',
+                    '      <Custommap name="detailSpecular" fileId="23"/>',
+                    '      <CustomParameter name="porosity" value="0.5"/>',
+                    '      <CustomParameter name="colorScale" value="0.03 0.03 0.032"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name == "Mat_Brake_Caliper_Red":
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="11"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="13"/>',
+                    '      <CustomParameter name="clearCoatIntensity" value="0.7"/>',
+                    '      <CustomParameter name="clearCoatSmoothness" value="0.9"/>',
+                    '      <CustomParameter name="colorScale" value="0.75 0.02 0.02"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name == "Mat_Glass_Tint":
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" alphaBlending="true" customShaderId="7">',
+                    '      <Texture fileId="24"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="25"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="26"/>',
+                    '      <CustomParameter name="alphaBlendingClipThreshold" value="0"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name == "Mat_Headlight_Lens":
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" alphaBlending="true" customShaderId="7">',
+                    '      <Texture fileId="27"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="25"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="26"/>',
+                    '      <CustomParameter name="alphaBlendingClipThreshold" value="0"/>',
+                    "    </Material>",
+                ]
+            )
+        elif name == "Mat_Taillight_Ruby_Lens":
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" alphaBlending="true" customShaderId="7">',
+                    '      <Texture fileId="27"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="25"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="26"/>',
+                    '      <CustomParameter name="colorScale" value="0.55 0.015 0.015"/>',
+                    '      <CustomParameter name="alphaBlendingClipThreshold" value="0"/>',
+                    "    </Material>",
+                ]
+            )
         elif name == "Mat_Taillight_Amber_Chamber":
-            lines.append(f'    <Material name="{escape(name)}" materialId="{mat_id}" specularColor="{spec}">')
-            lines.append('      <Texture fileId="1"/>')
-            lines.append("    </Material>")
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="1"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="16"/>',
+                    "    </Material>",
+                ]
+            )
         elif name == "Mat_Brakelight_Red":
-            lines.append(
-                f'    <Material name="{escape(name)}" materialId="{mat_id}" specularColor="{spec}" '
-                f'customShaderId="7" customShaderVariation="staticLight">'
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" '
+                    f'customShaderId="7" customShaderVariation="staticLight">',
+                    '      <Texture fileId="3"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="lightsIntensity" fileId="2"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="16"/>',
+                    "    </Material>",
+                ]
             )
-            lines.append('      <Texture fileId="3"/>')
-            lines.append('      <Emissivemap fileId="2"/>')
-            lines.append("    </Material>")
         elif name == "Mat_Headlight_Xenon":
-            lines.append(
-                f'    <Material name="{escape(name)}" materialId="{mat_id}" specularColor="{spec}" '
-                f'customShaderId="7" customShaderVariation="staticLight">'
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" '
+                    f'customShaderId="7" customShaderVariation="staticLight">',
+                    '      <Texture fileId="5"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="lightsIntensity" fileId="4"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="16"/>',
+                    "    </Material>",
+                ]
             )
-            lines.append('      <Texture fileId="5"/>')
-            lines.append('      <Emissivemap fileId="4"/>')
-            lines.append("    </Material>")
         elif name == "Mat_Reversing_Light":
-            lines.append(
-                f'    <Material name="{escape(name)}" materialId="{mat_id}" specularColor="{spec}" '
-                f'emissiveColor="0.1425 0.147 0.15 1" customShaderId="7" customShaderVariation="staticLight">'
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" '
+                    f'customShaderId="7" customShaderVariation="staticLight">',
+                    '      <Texture fileId="6"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="lightsIntensity" fileId="6"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="16"/>',
+                    "    </Material>",
+                ]
             )
-            lines.append('      <Texture fileId="6"/>')
-            lines.append("    </Material>")
+        elif name == "Mat_Taillight_Dark_Ruby":
+            lines.extend(
+                [
+                    f'    <Material name="{escape(name)}" materialId="{mat_id}" customShaderId="7">',
+                    '      <Texture fileId="8"/>',
+                    '      <Normalmap fileId="9"/>',
+                    '      <Glossmap fileId="10"/>',
+                    '      <Custommap name="detailDiffuse" fileId="15"/>',
+                    '      <Custommap name="detailNormal" fileId="14"/>',
+                    '      <Custommap name="detailSpecular" fileId="13"/>',
+                    '      <CustomParameter name="clearCoatIntensity" value="0.7"/>',
+                    '      <CustomParameter name="clearCoatSmoothness" value="0.9"/>',
+                    '      <CustomParameter name="colorScale" value="0.18 0.006 0.009"/>',
+                    "    </Material>",
+                ]
+            )
         else:
             col = pbr.get("baseColorFactor", [1.0, 1.0, 1.0, 1.0])
             diff = f"{col[0]:.6g} {col[1]:.6g} {col[2]:.6g} {col[3]:.6g}"
@@ -327,7 +501,7 @@ def convert_mesh_to_shape(
     all_nrm = []
     all_uv = []
     all_tri = []
-    subsets_meta: list[tuple[int, int, int, int]] = []
+    subsets_meta: list[tuple[int, int, int, int, str | None]] = []
     material_ids: list[int] = []
 
     v_offset = 0
@@ -343,7 +517,8 @@ def convert_mesh_to_shape(
         nrm = read_accessor(gltf, bin_chunk, attrs["NORMAL"]).astype(np.float64)
         indices = read_accessor(gltf, bin_chunk, prim["indices"]).astype(np.int64).reshape(-1, 3)
 
-        if prim_idx in INVERTED_PRIMITIVES.get(mesh_name, set()):
+        base_mesh_name = mesh_name.removesuffix("_very_high")
+        if prim_idx in INVERTED_PRIMITIVES.get(base_mesh_name, set()) or prim_idx in INVERTED_PRIMITIVES.get(mesh_name, set()):
             nrm = -nrm
             indices = indices[:, [0, 2, 1]]
 
@@ -379,9 +554,10 @@ def convert_mesh_to_shape(
             i3d_mat_id = glb_mat_idx + 2
         material_ids.append(i3d_mat_id)
 
+        slot_name = "carPaint" if i3d_mat_id == 7 else None
         nv = len(pos_fs)
         ni = len(indices) * 3
-        subsets_meta.append((v_offset, nv, idx_offset, ni))
+        subsets_meta.append((v_offset, nv, idx_offset, ni, slot_name))
         v_offset += nv
         idx_offset += ni
 
@@ -412,10 +588,12 @@ def convert_mesh_to_shape(
         uv_attr = ""
 
     t_lines = [f'          <t vi="{t[0]} {t[1]} {t[2]}"/>' for t in tri_cat]
-    s_lines = [
-        f'        <Subset firstVertex="{fv}" numVertices="{nv}" firstIndex="{fi}" numIndices="{ni}"/>'
-        for fv, nv, fi, ni in subsets_meta
-    ]
+    s_lines = []
+    for fv, nv, fi, ni, slot in subsets_meta:
+        slot_attr = f' materialSlotName="{slot}"' if slot else ""
+        s_lines.append(
+            f'        <Subset firstVertex="{fv}" numVertices="{nv}" firstIndex="{fi}" numIndices="{ni}"{slot_attr}/>'
+        )
 
     bv_center = 0.5 * (pos_cat.min(axis=0) + pos_cat.max(axis=0))
     bv_radius = float(np.linalg.norm(pos_cat - bv_center, axis=1).max())
@@ -747,6 +925,26 @@ def main() -> None:
             '    <File fileId="5" filename="textures/Tex_Headlight_Reflector.dds"/>',
             '    <File fileId="6" filename="textures/Tex_Taillight_Crystal.dds"/>',
             '    <File fileId="7" filename="$data/shaders/vehicleShader.xml"/>',
+            '    <File fileId="8" filename="$data/shared/white_diffuse.png"/>',
+            '    <File fileId="9" filename="$data/shared/default_normal.png"/>',
+            '    <File fileId="10" filename="$data/shared/default_vmask.png"/>',
+            '    <File fileId="11" filename="$data/shared/detailLibrary/calibrated/calibratedPaint_diffuse.png"/>',
+            '    <File fileId="12" filename="$data/shared/detailLibrary/calibrated/calibratedPaint_normal.png"/>',
+            '    <File fileId="13" filename="$data/shared/detailLibrary/calibrated/calibratedPaint_specular.png"/>',
+            '    <File fileId="14" filename="$data/shared/detailLibrary/flat_normal.png"/>',
+            '    <File fileId="15" filename="$data/shared/detailLibrary/metallic/clear_diffuse.png"/>',
+            '    <File fileId="16" filename="$data/shared/detailLibrary/metallic/clear_specular.png"/>',
+            '    <File fileId="17" filename="$data/shared/detailLibrary/metallic/scratched_diffuse.png"/>',
+            '    <File fileId="18" filename="$data/shared/detailLibrary/metallic/scratched_specular.png"/>',
+            '    <File fileId="19" filename="$data/shared/detailLibrary/nonMetallic/plastic/plasticPainted_diffuse.png"/>',
+            '    <File fileId="20" filename="$data/shared/detailLibrary/nonMetallic/plastic/plasticPainted_specular.png"/>',
+            '    <File fileId="21" filename="$data/shared/detailLibrary/nonMetallic/rubber/rubberBlack_diffuse.png"/>',
+            '    <File fileId="22" filename="$data/shared/detailLibrary/nonMetallic/rubber/rubber_normal.png"/>',
+            '    <File fileId="23" filename="$data/shared/detailLibrary/nonMetallic/rubber/rubber_specular.png"/>',
+            '    <File fileId="24" filename="$data/shared/windowDark_diffuse.png"/>',
+            '    <File fileId="25" filename="$data/shared/window_vmask.png"/>',
+            '    <File fileId="26" filename="$data/shared/detailLibrary/metallic/glass/glassClear03_specular.png"/>',
+            '    <File fileId="27" filename="$data/shared/clearGlass_diffuse.png"/>',
             "  </Files>",
             "  <Materials>",
             *materials_lines,

@@ -121,7 +121,7 @@
     <motorized>
         <consumerConfigurations>
             <consumerConfiguration>
-                <consumer fillUnitIndex="1" usage="12" fillType="DIESEL"/>
+                <consumer fillUnitIndex="1" usage="11" fillType="diesel"/>
             </consumerConfiguration>
         </consumerConfigurations>
 
@@ -135,62 +135,65 @@
 
         <motorConfigurations>
             <motorConfiguration name="$l10n_configuration_motor_10vht" hp="76" maxSpeed="165" price="0" isDefault="true">
-                <motor torqueScale="0.14" minRpm="850" maxRpm="6200" maxForwardSpeed="165" maxBackwardSpeed="35" brakeForce="1.4" lowBrakeForceScale="0.15" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.08">
-                    <torque normRpm="0.2" torque="0.65"/>
-                    <torque normRpm="0.4" torque="0.88"/>
+                <motor torqueScale="0.16" minRpm="850" maxRpm="6200" maxForwardSpeed="165" maxBackwardSpeed="35" brakeForce="1.4" lowBrakeForceScale="0.1" lowBrakeForceSpeedLimit="1" accelerationLimit="2.0" rotInertia="0.0012" dampingRateScale="0.06">
+                    <torque normRpm="0.1" torque="0.70"/>
+                    <torque normRpm="0.2" torque="0.82"/>
+                    <torque normRpm="0.4" torque="0.94"/>
                     <torque normRpm="0.6" torque="1.00"/>
                     <torque normRpm="0.8" torque="0.96"/>
                     <torque normRpm="0.95" torque="0.82"/>
                     <torque normRpm="1.0" torque="0.68"/>
                 </motor>
-                <transmission axleRatio="4.78" name="$l10n_golG5_transmission_manual">
-                    <directionChange useGear="true" useGroup="false" changeTime="0.4"/>
-                    <forwardGear gearRatio="3.45" name="1"/>
-                    <forwardGear gearRatio="1.95" name="2"/>
-                    <forwardGear gearRatio="1.28" name="3"/>
-                    <forwardGear gearRatio="0.97" name="4"/>
-                    <forwardGear gearRatio="0.79" name="5"/>
-                    <backwardGear gearRatio="3.18" name="R"/>
+                <transmission autoGearChangeTime="0.25" gearChangeTime="0.20" name="$l10n_golG5_transmission_manual" axleRatio="1" startGearThreshold="0.01">
+                    <directionChange useGear="true" useGroup="false" changeTime="0.25"/>
+                    <backwardGear maxSpeed="35" name="R"/>
+                    <forwardGear maxSpeed="38" name="1"/>
+                    <forwardGear maxSpeed="68" name="2"/>
+                    <forwardGear maxSpeed="102" name="3"/>
+                    <forwardGear maxSpeed="134" name="4"/>
+                    <forwardGear maxSpeed="165" name="5"/>
                 </transmission>
             </motorConfiguration>
 
             <motorConfiguration name="$l10n_configuration_motor_16vht" hp="104" maxSpeed="190" price="3800">
-                <motor torqueScale="0.19" minRpm="850" maxRpm="6200" maxForwardSpeed="190" maxBackwardSpeed="40" brakeForce="1.6" lowBrakeForceScale="0.15" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.08">
-                    <torque normRpm="0.2" torque="0.72"/>
-                    <torque normRpm="0.4" torque="0.95"/>
+                <motor torqueScale="0.22" minRpm="850" maxRpm="6200" maxForwardSpeed="190" maxBackwardSpeed="38" brakeForce="1.6" lowBrakeForceScale="0.1" lowBrakeForceSpeedLimit="1" accelerationLimit="2.2" rotInertia="0.0012" dampingRateScale="0.06">
+                    <torque normRpm="0.1" torque="0.72"/>
+                    <torque normRpm="0.2" torque="0.84"/>
+                    <torque normRpm="0.4" torque="0.96"/>
                     <torque normRpm="0.6" torque="1.00"/>
                     <torque normRpm="0.8" torque="0.94"/>
                     <torque normRpm="0.95" torque="0.80"/>
                     <torque normRpm="1.0" torque="0.66"/>
                 </motor>
-                <transmission axleRatio="4.06" name="$l10n_golG5_transmission_manual">
-                    <directionChange useGear="true" useGroup="false" changeTime="0.4"/>
-                    <forwardGear gearRatio="3.45" name="1"/>
-                    <forwardGear gearRatio="1.95" name="2"/>
-                    <forwardGear gearRatio="1.28" name="3"/>
-                    <forwardGear gearRatio="0.93" name="4"/>
-                    <forwardGear gearRatio="0.75" name="5"/>
-                    <backwardGear gearRatio="3.18" name="R"/>
+                <transmission autoGearChangeTime="0.25" gearChangeTime="0.20" name="$l10n_golG5_transmission_manual" axleRatio="1" startGearThreshold="0.01">
+                    <directionChange useGear="true" useGroup="false" changeTime="0.25"/>
+                    <backwardGear maxSpeed="38" name="R"/>
+                    <forwardGear maxSpeed="44" name="1"/>
+                    <forwardGear maxSpeed="78" name="2"/>
+                    <forwardGear maxSpeed="116" name="3"/>
+                    <forwardGear maxSpeed="154" name="4"/>
+                    <forwardGear maxSpeed="190" name="5"/>
                 </transmission>
             </motorConfiguration>
 
             <motorConfiguration name="$l10n_configuration_motor_16stage1" hp="125" maxSpeed="208" price="6500">
-                <motor torqueScale="0.23" minRpm="900" maxRpm="6500" maxForwardSpeed="208" maxBackwardSpeed="45" brakeForce="1.8" lowBrakeForceScale="0.15" lowBrakeForceSpeedLimit="1" rotInertia="0.0011" dampingRateScale="0.07">
-                    <torque normRpm="0.2" torque="0.76"/>
+                <motor torqueScale="0.27" minRpm="900" maxRpm="6500" maxForwardSpeed="208" maxBackwardSpeed="42" brakeForce="1.8" lowBrakeForceScale="0.1" lowBrakeForceSpeedLimit="1" accelerationLimit="2.4" rotInertia="0.0011" dampingRateScale="0.05">
+                    <torque normRpm="0.1" torque="0.74"/>
+                    <torque normRpm="0.2" torque="0.86"/>
                     <torque normRpm="0.4" torque="0.97"/>
                     <torque normRpm="0.6" torque="1.00"/>
                     <torque normRpm="0.8" torque="0.98"/>
                     <torque normRpm="0.95" torque="0.89"/>
                     <torque normRpm="1.0" torque="0.75"/>
                 </motor>
-                <transmission axleRatio="4.06" name="$l10n_golG5_transmission_manual">
-                    <directionChange useGear="true" useGroup="false" changeTime="0.35"/>
-                    <forwardGear gearRatio="3.45" name="1"/>
-                    <forwardGear gearRatio="1.95" name="2"/>
-                    <forwardGear gearRatio="1.25" name="3"/>
-                    <forwardGear gearRatio="0.91" name="4"/>
-                    <forwardGear gearRatio="0.73" name="5"/>
-                    <backwardGear gearRatio="3.18" name="R"/>
+                <transmission autoGearChangeTime="0.22" gearChangeTime="0.18" name="$l10n_golG5_transmission_manual" axleRatio="1" startGearThreshold="0.01">
+                    <directionChange useGear="true" useGroup="false" changeTime="0.22"/>
+                    <backwardGear maxSpeed="42" name="R"/>
+                    <forwardGear maxSpeed="48" name="1"/>
+                    <forwardGear maxSpeed="85" name="2"/>
+                    <forwardGear maxSpeed="126" name="3"/>
+                    <forwardGear maxSpeed="168" name="4"/>
+                    <forwardGear maxSpeed="208" name="5"/>
                 </transmission>
             </motorConfiguration>
         </motorConfigurations>
@@ -209,7 +212,7 @@
         <fillUnitConfigurations>
             <fillUnitConfiguration>
                 <fillUnits>
-                    <fillUnit fillTypes="DIESEL" capacity="55" startFillLevel="55" startFillType="DIESEL" showOnHud="true" showInShop="true">
+                    <fillUnit unitTextOverride="$l10n_unit_literShort" showOnHud="false" showInShop="false" fillTypes="diesel" capacity="55" startFillLevel="55" startFillType="diesel">
                         <exactFillRootNode node="exactFillRootNodeFuel"/>
                     </fillUnit>
                 </fillUnits>
@@ -227,14 +230,14 @@
         </attacherJoint>
     </attacherJoints>
 
-    <baseColorConfigurations useDefaultColors="false" defaultColorIndex="0">
+    <baseColorConfigurations useDefaultColors="false" defaultColorIndex="0" defaultColorMaterialTemplateName="calibratedGlossPaint">
+        <baseColorConfiguration name="$l10n_color_vwNinjaBlack" color="0.008 0.009 0.011" materialTemplateName="calibratedGlossPaint" price="0" isDefault="true"/>
+        <baseColorConfiguration name="$l10n_color_vwCrystalWhite" color="0.90 0.91 0.92" materialTemplateName="calibratedGlossPaint" price="500"/>
+        <baseColorConfiguration name="$l10n_color_vwSiriusSilver" color="0.58 0.60 0.63" materialTemplateName="calibratedMetallicPaint" price="750" isMetallic="true"/>
+        <baseColorConfiguration name="$l10n_color_vwSpectrusGray" color="0.20 0.22 0.24" materialTemplateName="calibratedMetallicPaint" price="750" isMetallic="true"/>
+        <baseColorConfiguration name="$l10n_color_vwFlashRed" color="0.68 0.02 0.02" materialTemplateName="calibratedGlossPaint" price="600"/>
+        <baseColorConfiguration name="$l10n_color_vwBorealBlue" color="0.03 0.14 0.36" materialTemplateName="calibratedMetallicPaint" price="750" isMetallic="true"/>
         <material materialSlotName="carPaint"/>
-        <baseColorConfiguration name="$l10n_color_vwNinjaBlack" color="0.015 0.016 0.020" price="0" isDefault="true"/>
-        <baseColorConfiguration name="$l10n_color_vwCrystalWhite" color="0.90 0.91 0.92" price="500"/>
-        <baseColorConfiguration name="$l10n_color_vwSiriusSilver" color="0.58 0.60 0.63" price="750" isMetallic="true"/>
-        <baseColorConfiguration name="$l10n_color_vwSpectrusGray" color="0.20 0.22 0.24" price="750" isMetallic="true"/>
-        <baseColorConfiguration name="$l10n_color_vwFlashRed" color="0.68 0.02 0.02" price="600"/>
-        <baseColorConfiguration name="$l10n_color_vwBorealBlue" color="0.03 0.14 0.36" price="750" isMetallic="true"/>
     </baseColorConfigurations>
 
     <i3dMappings>

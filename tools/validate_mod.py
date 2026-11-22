@@ -49,7 +49,7 @@ CARPAINT_SHAPES = {
     "door_pside_r",
 }
 
-BUILTIN_L10N_KEYS = {"configuration_valueDefault"}
+BUILTIN_L10N_KEYS = {"configuration_valueDefault", "unit_literShort"}
 NODE_REF_ATTRS = ("node", "repr", "driveNode", "rotateNode", "linkNode", "shaderNode", "targetNode")
 
 
@@ -199,8 +199,13 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
     local_i3d_xsd = LOCAL_SCHEMA_DIR / "i3d-1.6.xsd"
     if local_i3d_xsd.is_file():
         try:
+            import copy
+            doc_copy = copy.deepcopy(doc)
+            for sub in doc_copy.findall(".//Subsets/Subset"):
+                if "materialSlotName" in sub.attrib:
+                    del sub.attrib["materialSlotName"]
             i3d_schema = LET.XMLSchema(LET.parse(str(local_i3d_xsd)))
-            i3d_schema.assertValid(doc)
+            i3d_schema.assertValid(doc_copy)
         except Exception as exc:
             errors.append(f"i3d-1.6.xsd validation failed: {exc}")
 
@@ -229,7 +234,7 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
                 shader_material_ids.add(mid)
                 if mat.get("customShaderVariation") == "staticLight":
                     static_light_mat_ids.add(mid)
-        for tex_tag in ("Texture", "Emissivemap", "Normalmap", "Glossmap"):
+        for tex_tag in ("Texture", "Emissivemap", "Normalmap", "Glossmap", "Custommap"):
             for child in mat.findall(f"./{tex_tag}"):
                 tfid = child.get("fileId")
                 if tfid and tfid not in file_ids:
@@ -326,10 +331,14 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
                         if mid == carpaint_mat_id:
                             if idx >= len(subsets):
                                 errors.append(f"Shape {sname}: materialIds index {idx} has no matching Subset")
+                            elif subsets[idx].get("materialSlotName") != "carPaint":
+                                errors.append(
+                                    f"Shape {sname} subset {idx} (carPaint) missing materialSlotName='carPaint'"
+                                )
                             else:
                                 found_carpaint_subset = True
                     if not found_carpaint_subset:
-                        errors.append(f"Car-paint shape {sname} does not reference carPaint materialId={carpaint_mat_id}")
+                        errors.append(f"Car-paint shape {sname} does not use carPaint materialId={carpaint_mat_id} with materialSlotName='carPaint'")
 
     return errors, scene_paths, shader_shape_paths
 
