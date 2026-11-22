@@ -203832,16 +203832,16 @@
   </Shapes>
   <Dynamics/>
   <Scene>
-    <Shape name="golG5_main_component1" nodeId="1" shapeId="1" materialIds="1" rigidBodyType="dynamic" compound="true" collision="true" nonRenderable="true" clipDistance="300">
+    <Shape name="golG5_main_component1" nodeId="1" shapeId="1" materialIds="1" dynamic="true" compound="true" collisionFilterGroup="0x10004" collisionFilterMask="0xfe3ffb83" castsShadows="true" receiveShadows="true" nonRenderable="true" clipDistance="300">
       <TransformGroup name="wheels" nodeId="2">
         <TransformGroup name="wheelFrontLeftRepr" nodeId="3" translation="0.8059 0.3526 1.3431">
-          <Shape name="wheelFrontLeftDrive" nodeId="4" shapeId="2" materialIds="4 5" castsShadows="true" receiveShadows="true" clipDistance="300"/>
+          <Shape name="wheelFrontLeftDrive" nodeId="4" shapeId="2" materialIds="4 5" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
         </TransformGroup>
         <TransformGroup name="wheelFrontRightRepr" nodeId="5" translation="-0.8165 0.3526 1.3431">
-          <Shape name="wheelFrontRightDrive" nodeId="6" shapeId="3" materialIds="4 5" castsShadows="true" receiveShadows="true" clipDistance="300"/>
+          <Shape name="wheelFrontRightDrive" nodeId="6" shapeId="3" materialIds="4 5" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
         </TransformGroup>
-        <Shape name="wheelBackLeft" nodeId="7" shapeId="2" materialIds="4 5" translation="0.8059 0.3526 -1.4167" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="wheelBackRight" nodeId="8" shapeId="3" materialIds="4 5" translation="-0.8165 0.3526 -1.4167" castsShadows="true" receiveShadows="true" clipDistance="300"/>
+        <Shape name="wheelBackLeft" nodeId="7" shapeId="2" materialIds="4 5" translation="0.8059 0.3526 -1.4167" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="wheelBackRight" nodeId="8" shapeId="3" materialIds="4 5" translation="-0.8165 0.3526 -1.4167" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
       </TransformGroup>
       <TransformGroup name="cameras" nodeId="9">
         <TransformGroup name="outdoorCameraTarget" nodeId="10" translation="0 1.25 0" rotation="-18 180 0">
@@ -203860,15 +203860,15 @@
           <Light name="reverseLightHigh1" nodeId="21" type="spot" translation="0 0.72 -2.05" rotation="-20 0 0" color="0.9 0.92 1.0" range="8" coneAngle="110" dropOff="2" emitDiffuse="true" emitSpecular="false" castShadowMap="false"/>
         </TransformGroup>
         <TransformGroup name="staticLights" nodeId="22">
-          <Shape name="headlight_l" nodeId="23" shapeId="5" materialIds="14" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="headlight_r" nodeId="24" shapeId="6" materialIds="14" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="luxfarol" nodeId="25" shapeId="7" materialIds="17" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="brakelight_l" nodeId="26" shapeId="8" materialIds="13 15" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="brakelight_m" nodeId="27" shapeId="9" materialIds="13" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="brakelight_r" nodeId="28" shapeId="10" materialIds="13 15" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="reversinglight_l" nodeId="29" shapeId="11" materialIds="16 16" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="reversinglight_r" nodeId="30" shapeId="12" materialIds="16 16" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-          <Shape name="lanternada" nodeId="31" shapeId="13" materialIds="12" castsShadows="true" receiveShadows="true" clipDistance="300"/>
+          <Shape name="headlight_l" nodeId="23" shapeId="5" materialIds="14" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="headlight_r" nodeId="24" shapeId="6" materialIds="14" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="luxfarol" nodeId="25" shapeId="7" materialIds="17" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="brakelight_l" nodeId="26" shapeId="8" materialIds="13 15" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="brakelight_m" nodeId="27" shapeId="9" materialIds="13" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="brakelight_r" nodeId="28" shapeId="10" materialIds="13 15" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="reversinglight_l" nodeId="29" shapeId="11" materialIds="16 16" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="reversinglight_r" nodeId="30" shapeId="12" materialIds="16 16" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+          <Shape name="lanternada" nodeId="31" shapeId="13" materialIds="12" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
         </TransformGroup>
       </TransformGroup>
       <TransformGroup name="character" nodeId="32">
@@ -203877,7 +203877,7 @@
         <TransformGroup name="playerRightFootTarget" nodeId="35" translation="0.24 0.34 0.42" rotation="0 -10 0"/>
         <TransformGroup name="playerLeftFootTarget" nodeId="36" translation="0.56 0.34 0.42" rotation="0 10 0"/>
         <TransformGroup name="steeringWheelBase" nodeId="37" translation="0.4026 0.9492 0.5397" rotation="-65 0 0">
-          <Shape name="steeringWheel" nodeId="38" shapeId="4" materialIds="9 9 5" castsShadows="true" receiveShadows="true" clipDistance="300">
+          <Shape name="steeringWheel" nodeId="38" shapeId="4" materialIds="9 9 5" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300">
             <TransformGroup name="playerRightHandTarget" nodeId="39" translation="-0.155 0 0.02" rotation="0 0 -90"/>
             <TransformGroup name="playerLeftHandTarget" nodeId="40" translation="0.155 0 0.02" rotation="0 0 90"/>
           </Shape>
@@ -203890,30 +203890,31 @@
         <TransformGroup name="exhaustParticle" nodeId="44" translation="0.48 0.28 -2.08" rotation="-80 0 0"/>
       </TransformGroup>
       <TransformGroup name="visuals" nodeId="45">
-        <Shape name="bodyshell" nodeId="46" shapeId="14" materialIds="7 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="bonnet" nodeId="47" shapeId="15" materialIds="7 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="boot" nodeId="48" shapeId="16" materialIds="6 7 8 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="bumper_f" nodeId="49" shapeId="17" materialIds="6 7 9 5" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="bumper_r" nodeId="50" shapeId="18" materialIds="6 7 9 5" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="door_dside_f" nodeId="51" shapeId="19" materialIds="6 7 6 8 9 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="door_pside_f" nodeId="52" shapeId="20" materialIds="6 7 6 8 9 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="door_dside_r" nodeId="53" shapeId="21" materialIds="9 7 8 9 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="door_pside_r" nodeId="54" shapeId="22" materialIds="9 7 8 9 9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="painel" nodeId="55" shapeId="23" materialIds="8 9 5" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="painellux" nodeId="56" shapeId="24" materialIds="9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="dials" nodeId="57" shapeId="25" materialIds="9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="lanterna" nodeId="58" shapeId="26" materialIds="2" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="Taillight_Housing_Rear" nodeId="59" shapeId="27" materialIds="15 18 3" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="Headlight_Optics_Detail" nodeId="60" shapeId="28" materialIds="2 19" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="hub_lf" nodeId="61" shapeId="29" materialIds="10 11" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="hub_rf" nodeId="62" shapeId="30" materialIds="10 11" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="hub_lr" nodeId="63" shapeId="31" materialIds="10 11" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="hub_rr" nodeId="64" shapeId="32" materialIds="10 11" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="suspension_lf" nodeId="65" shapeId="33" materialIds="9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="suspension_rf" nodeId="66" shapeId="34" materialIds="9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="suspension_lr" nodeId="67" shapeId="35" materialIds="9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
-        <Shape name="suspension_rr" nodeId="68" shapeId="36" materialIds="9" castsShadows="true" receiveShadows="true" clipDistance="300"/>
+        <Shape name="bodyshell" nodeId="46" shapeId="14" materialIds="7 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="bonnet" nodeId="47" shapeId="15" materialIds="7 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="boot" nodeId="48" shapeId="16" materialIds="6 7 8 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="bumper_f" nodeId="49" shapeId="17" materialIds="6 7 9 5" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="bumper_r" nodeId="50" shapeId="18" materialIds="6 7 9 5" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="door_dside_f" nodeId="51" shapeId="19" materialIds="6 7 6 8 9 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="door_pside_f" nodeId="52" shapeId="20" materialIds="6 7 6 8 9 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="door_dside_r" nodeId="53" shapeId="21" materialIds="9 7 8 9 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="door_pside_r" nodeId="54" shapeId="22" materialIds="9 7 8 9 9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="painel" nodeId="55" shapeId="23" materialIds="8 9 5" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="painellux" nodeId="56" shapeId="24" materialIds="9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="dials" nodeId="57" shapeId="25" materialIds="9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="lanterna" nodeId="58" shapeId="26" materialIds="2" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="Taillight_Housing_Rear" nodeId="59" shapeId="27" materialIds="15 18 3" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="Headlight_Optics_Detail" nodeId="60" shapeId="28" materialIds="2 19" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="hub_lf" nodeId="61" shapeId="29" materialIds="10 11" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="hub_rf" nodeId="62" shapeId="30" materialIds="10 11" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="hub_lr" nodeId="63" shapeId="31" materialIds="10 11" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="hub_rr" nodeId="64" shapeId="32" materialIds="10 11" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="suspension_lf" nodeId="65" shapeId="33" materialIds="9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="suspension_rf" nodeId="66" shapeId="34" materialIds="9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="suspension_lr" nodeId="67" shapeId="35" materialIds="9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
+        <Shape name="suspension_rr" nodeId="68" shapeId="36" materialIds="9" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>
       </TransformGroup>
+      <Shape name="exactFillRootNodeFuel" nodeId="69" shapeId="1" materialIds="1" translation="-0.75 0.78 -1.45" scale="0.25 0.25 0.25" kinematic="true" compound="true" collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" castsShadows="true" receiveShadows="true" nonRenderable="true"/>
     </Shape>
   </Scene>
   <Animation/>

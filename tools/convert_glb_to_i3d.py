@@ -70,6 +70,16 @@ VISUAL_NODES = [
     "suspension_rr",
 ]
 
+# Primitives in gol_g5.glb whose face winding and vertex normals point inward (>65% vs car center)
+INVERTED_PRIMITIVES: dict[str, set[int]] = {
+    "bonnet": {0},
+    "bumper_f": {1},
+    "door_dside_f": {0, 1, 2, 4, 5},
+    "door_pside_f": {0, 1, 2, 4, 5},
+    "door_dside_r": {0, 1, 3, 4},
+    "door_pside_r": {3, 4},
+}
+
 
 def load_glb(path: Path) -> tuple[dict[str, Any], bytes]:
     raw = path.read_bytes()
@@ -317,11 +327,15 @@ def convert_mesh_to_shape(
     trans_vec = world_mat[:3, 3]
     rx_sw = rx_matrix(STEERING_TILT_DEG)
 
-    for prim in mesh["primitives"]:
+    for prim_idx, prim in enumerate(mesh["primitives"]):
         attrs = prim["attributes"]
         pos = read_accessor(gltf, bin_chunk, attrs["POSITION"]).astype(np.float64)
         nrm = read_accessor(gltf, bin_chunk, attrs["NORMAL"]).astype(np.float64)
         indices = read_accessor(gltf, bin_chunk, prim["indices"]).astype(np.int64).reshape(-1, 3)
+
+        if prim_idx in INVERTED_PRIMITIVES.get(mesh_name, set()):
+            nrm = -nrm
+            indices = indices[:, [0, 2, 1]]
 
         if mode == "wheel":
             pos_fs = np.column_stack([-pos[:, 0], pos[:, 1], -pos[:, 2]])
@@ -527,7 +541,8 @@ def main() -> None:
     # Build <Scene>
     scene_lines.append(
         f'    <Shape name="golG5_main_component1" nodeId="{next_nid()}" shapeId="1" materialIds="1" '
-        f'rigidBodyType="dynamic" compound="true" collision="true" nonRenderable="true" clipDistance="300">'
+        f'dynamic="true" compound="true" collisionFilterGroup="0x10004" collisionFilterMask="0xfe3ffb83" '
+        f'castsShadows="true" receiveShadows="true" nonRenderable="true" clipDistance="300">'
     )
 
     # 0>0 wheels
@@ -537,7 +552,7 @@ def main() -> None:
     )
     scene_lines.append(
         f'          <Shape name="wheelFrontLeftDrive" nodeId="{next_nid()}" shapeId="{fl_sid}" materialIds="{fl_mats}" '
-        f'castsShadows="true" receiveShadows="true" clipDistance="300"/>'
+        f'castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
     scene_lines.append("        </TransformGroup>")
     scene_lines.append(
@@ -545,16 +560,16 @@ def main() -> None:
     )
     scene_lines.append(
         f'          <Shape name="wheelFrontRightDrive" nodeId="{next_nid()}" shapeId="{fr_sid}" materialIds="{fr_mats}" '
-        f'castsShadows="true" receiveShadows="true" clipDistance="300"/>'
+        f'castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
     scene_lines.append("        </TransformGroup>")
     scene_lines.append(
         f'        <Shape name="wheelBackLeft" nodeId="{next_nid()}" shapeId="{rl_sid}" materialIds="{rl_mats}" '
-        f'translation="0.8059 0.3526 -1.4167" castsShadows="true" receiveShadows="true" clipDistance="300"/>'
+        f'translation="0.8059 0.3526 -1.4167" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
     scene_lines.append(
         f'        <Shape name="wheelBackRight" nodeId="{next_nid()}" shapeId="{rr_sid}" materialIds="{rr_mats}" '
-        f'translation="-0.8165 0.3526 -1.4167" castsShadows="true" receiveShadows="true" clipDistance="300"/>'
+        f'translation="-0.8165 0.3526 -1.4167" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
     scene_lines.append("      </TransformGroup>")
 
@@ -612,7 +627,7 @@ def main() -> None:
         s_id, mats_str = wheel_shape_attrs(lname)
         scene_lines.append(
             f'          <Shape name="{escape(lname)}" nodeId="{next_nid()}" shapeId="{s_id}" '
-            f'materialIds="{mats_str}" castsShadows="true" receiveShadows="true" clipDistance="300"/>'
+            f'materialIds="{mats_str}" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
         )
     scene_lines.append("        </TransformGroup>")
     scene_lines.append("      </TransformGroup>")
@@ -638,7 +653,7 @@ def main() -> None:
     sw_s_id, sw_mats_str = wheel_shape_attrs("steeringwheel")
     scene_lines.append(
         f'          <Shape name="steeringWheel" nodeId="{next_nid()}" shapeId="{sw_s_id}" '
-        f'materialIds="{sw_mats_str}" castsShadows="true" receiveShadows="true" clipDistance="300">'
+        f'materialIds="{sw_mats_str}" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300">'
     )
     scene_lines.append(
         f'            <TransformGroup name="playerRightHandTarget" nodeId="{next_nid()}" translation="-0.155 0 0.02" rotation="0 0 -90"/>'
@@ -670,9 +685,16 @@ def main() -> None:
         s_id, mats_str = wheel_shape_attrs(vname)
         scene_lines.append(
             f'        <Shape name="{escape(vname)}" nodeId="{next_nid()}" shapeId="{s_id}" '
-            f'materialIds="{mats_str}" castsShadows="true" receiveShadows="true" clipDistance="300"/>'
+            f'materialIds="{mats_str}" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
         )
     scene_lines.append("      </TransformGroup>")
+    # 0>7 fuel trigger
+    scene_lines.append(
+        f'      <Shape name="exactFillRootNodeFuel" nodeId="{next_nid()}" shapeId="1" materialIds="1" '
+        f'translation="-0.75 0.78 -1.45" scale="0.25 0.25 0.25" kinematic="true" compound="true" '
+        f'collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" castsShadows="true" '
+        f'receiveShadows="true" nonRenderable="true"/>'
+    )
     scene_lines.append("    </Shape>")
 
     materials_lines = build_materials_xml(gltf)
@@ -769,6 +791,7 @@ def main() -> None:
         "playerLeftHandTarget",
         "trailerAttacherJointBackLow",
         "exhaustParticle",
+        "exactFillRootNodeFuel",
     ]
     nodes_dict = {k: mapped_paths[k] for k in contract_node_keys}
 

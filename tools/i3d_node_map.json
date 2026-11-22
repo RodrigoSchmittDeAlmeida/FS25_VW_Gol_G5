@@ -35,7 +35,8 @@
     "playerRightHandTarget": "0>3|4|0|0",
     "playerLeftHandTarget": "0>3|4|0|1",
     "trailerAttacherJointBackLow": "0>4|0",
-    "exhaustParticle": "0>5|0"
+    "exhaustParticle": "0>5|0",
+    "exactFillRootNodeFuel": "0>7"
   },
   "stats": {
     "source_glb": "source_assets/gol_g5.glb",
@@ -43,8 +44,8 @@
     "total_shapes": 36,
     "total_materials": 19,
     "total_textures": 6,
-    "total_vertices": 155693,
-    "total_triangles": 112342,
+    "total_vertices": 155701,
+    "total_triangles": 112354,
     "unique_shape_vertices": 113321,
     "unique_shape_triangles": 90094,
     "bbox_fs25_min": [
