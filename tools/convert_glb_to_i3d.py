@@ -175,11 +175,17 @@ def fmt_vec(arr: np.ndarray) -> str:
     return f"{arr[0]:.6g} {arr[1]:.6g} {arr[2]:.6g}"
 
 
-def build_collision_box_shape() -> tuple[str, int, int]:
-    """Build simplified collision box (2.06 x 1.55 x 4.24 m, ground clearance 0.24 m)."""
-    x0, x1 = -1.03, 1.03
-    y0, y1 = 0.24, 1.79
-    z0, z1 = -2.10, 2.14
+STATIC_LIGHT_MATERIAL_IDS = {13, 14, 16}
+
+
+def build_box_shape(
+    shape_id: int,
+    name: str,
+    bounds: tuple[float, float, float, float, float, float],
+    mesh_usage: int = 256,
+) -> tuple[str, int, int]:
+    """Build an unscaled CPU-mesh box IndexedTriangleSet (meshUsage=256 for PhysX)."""
+    x0, x1, y0, y1, z0, z1 = bounds
     corners = np.array(
         [
             [x0, y0, z0],  # 0: R B Back
@@ -196,6 +202,8 @@ def build_collision_box_shape() -> tuple[str, int, int]:
     center = corners.mean(axis=0)
     normals = corners - center
     normals /= np.linalg.norm(normals, axis=1, keepdims=True)
+    half_extents = np.array([(x1 - x0) / 2.0, (y1 - y0) / 2.0, (z1 - z0) / 2.0], dtype=np.float64)
+    bv_radius = float(np.linalg.norm(half_extents))
 
     # Outward CCW triangles
     tris = [
@@ -215,7 +223,8 @@ def build_collision_box_shape() -> tuple[str, int, int]:
 
     xml = "\n".join(
         [
-            '    <IndexedTriangleSet name="golG5_collisionBox" shapeId="1">',
+            f'    <IndexedTriangleSet name="{escape(name)}" shapeId="{shape_id}" meshUsage="{mesh_usage}" '
+            f'bvCenter="{center[0]:.6g} {center[1]:.6g} {center[2]:.6g}" bvRadius="{bv_radius:.6g}">',
             '      <Vertices count="8" normal="true">',
             *v_lines,
             "      </Vertices>",
@@ -245,8 +254,9 @@ def build_materials_xml(gltf: dict[str, Any]) -> list[str]:
         spec = f"{1.0 - rough:.6g} {metal:.6g} 0"
 
         if name == "Mat_CarPaint_Black":
+            # FS25 baseColorConfigurations matches <material materialSlotName="carPaint"/> to <Material name="carPaint">
             lines.append(
-                f'    <Material name="{escape(name)}" materialId="{mat_id}" '
+                f'    <Material name="carPaint" materialId="{mat_id}" '
                 f'diffuseColor="0.015 0.016 0.02 1" specularColor="{spec}" customShaderId="7">'
             )
             lines.append('      <CustomParameter name="colorScale" value="0.015 0.016 0.020 1"/>')
@@ -317,7 +327,7 @@ def convert_mesh_to_shape(
     all_nrm = []
     all_uv = []
     all_tri = []
-    subsets_meta: list[tuple[int, int, int, int, str | None]] = []
+    subsets_meta: list[tuple[int, int, int, int]] = []
     material_ids: list[int] = []
 
     v_offset = 0
@@ -369,10 +379,9 @@ def convert_mesh_to_shape(
             i3d_mat_id = glb_mat_idx + 2
         material_ids.append(i3d_mat_id)
 
-        slot_name = "carPaint" if i3d_mat_id == 7 else None
         nv = len(pos_fs)
         ni = len(indices) * 3
-        subsets_meta.append((v_offset, nv, idx_offset, ni, slot_name))
+        subsets_meta.append((v_offset, nv, idx_offset, ni))
         v_offset += nv
         idx_offset += ni
 
@@ -380,13 +389,21 @@ def convert_mesh_to_shape(
     nrm_cat = np.vstack(all_nrm)
     tri_cat = np.vstack(all_tri)
 
+    emit_uv1 = has_uv and bool(set(material_ids) & STATIC_LIGHT_MATERIAL_IDS)
     if has_uv:
         uv_cat = np.vstack(all_uv)
-        v_lines = [
-            f'          <v p="{p[0]:.6g} {p[1]:.6g} {p[2]:.6g}" n="{n[0]:.6g} {n[1]:.6g} {n[2]:.6g}" t0="{t[0]:.6g} {t[1]:.6g}"/>'
-            for p, n, t in zip(pos_cat, nrm_cat, uv_cat)
-        ]
-        uv_attr = ' uv0="true"'
+        if emit_uv1:
+            v_lines = [
+                f'          <v p="{p[0]:.6g} {p[1]:.6g} {p[2]:.6g}" n="{n[0]:.6g} {n[1]:.6g} {n[2]:.6g}" t0="{t[0]:.6g} {t[1]:.6g}" t1="{t[0]:.6g} {t[1]:.6g}"/>'
+                for p, n, t in zip(pos_cat, nrm_cat, uv_cat)
+            ]
+            uv_attr = ' uv0="true" uv1="true"'
+        else:
+            v_lines = [
+                f'          <v p="{p[0]:.6g} {p[1]:.6g} {p[2]:.6g}" n="{n[0]:.6g} {n[1]:.6g} {n[2]:.6g}" t0="{t[0]:.6g} {t[1]:.6g}"/>'
+                for p, n, t in zip(pos_cat, nrm_cat, uv_cat)
+            ]
+            uv_attr = ' uv0="true"'
     else:
         v_lines = [
             f'          <v p="{p[0]:.6g} {p[1]:.6g} {p[2]:.6g}" n="{n[0]:.6g} {n[1]:.6g} {n[2]:.6g}"/>'
@@ -395,16 +412,18 @@ def convert_mesh_to_shape(
         uv_attr = ""
 
     t_lines = [f'          <t vi="{t[0]} {t[1]} {t[2]}"/>' for t in tri_cat]
-    s_lines = []
-    for fv, nv, fi, ni, slot in subsets_meta:
-        slot_attr = f' materialSlotName="{slot}"' if slot else ""
-        s_lines.append(
-            f'        <Subset firstVertex="{fv}" numVertices="{nv}" firstIndex="{fi}" numIndices="{ni}"{slot_attr}/>'
-        )
+    s_lines = [
+        f'        <Subset firstVertex="{fv}" numVertices="{nv}" firstIndex="{fi}" numIndices="{ni}"/>'
+        for fv, nv, fi, ni in subsets_meta
+    ]
+
+    bv_center = 0.5 * (pos_cat.min(axis=0) + pos_cat.max(axis=0))
+    bv_radius = float(np.linalg.norm(pos_cat - bv_center, axis=1).max())
 
     xml = "\n".join(
         [
-            f'    <IndexedTriangleSet name="{escape(mesh_name)}" shapeId="{shape_id}">',
+            f'    <IndexedTriangleSet name="{escape(mesh_name)}" shapeId="{shape_id}" '
+            f'bvCenter="{bv_center[0]:.6g} {bv_center[1]:.6g} {bv_center[2]:.6g}" bvRadius="{bv_radius:.6g}">',
             f'      <Vertices count="{len(pos_cat)}" normal="true"{uv_attr}>',
             *v_lines,
             "      </Vertices>",
@@ -442,12 +461,18 @@ def main() -> None:
 
     # Build <Shapes>
     shapes_xml_parts: list[str] = []
-    col_xml, col_v, col_t = build_collision_box_shape()
+    col_xml, col_v, col_t = build_box_shape(
+        1, "golG5_collisionBox", (-1.03, 1.03, 0.24, 1.79, -2.10, 2.14), mesh_usage=256
+    )
     shapes_xml_parts.append(col_xml)
+    fuel_xml, fuel_v, fuel_t = build_box_shape(
+        2, "exactFillRootNodeFuel_shape", (-0.2, 0.2, -0.2, 0.2, -0.2, 0.2), mesh_usage=256
+    )
+    shapes_xml_parts.append(fuel_xml)
 
     # Map mesh_idx -> (shape_id, material_ids_str, verts, tris)
     mesh_shape_info: dict[int, tuple[int, str, int, int]] = {}
-    next_shape_id = 2
+    next_shape_id = 3
 
     global_min = np.array([np.inf, np.inf, np.inf], dtype=np.float64)
     global_max = np.array([-np.inf, -np.inf, -np.inf], dtype=np.float64)
@@ -541,7 +566,8 @@ def main() -> None:
     # Build <Scene>
     scene_lines.append(
         f'    <Shape name="golG5_main_component1" nodeId="{next_nid()}" shapeId="1" materialIds="1" '
-        f'dynamic="true" compound="true" collisionFilterGroup="0x10004" collisionFilterMask="0xfe3ffb83" '
+        f'dynamic="true" compound="true" collision="true" density="1" solverIterationCount="10" '
+        f'collisionFilterGroup="0x10004" collisionFilterMask="0xfe3ffb83" '
         f'castsShadows="true" receiveShadows="true" nonRenderable="true" clipDistance="300">'
     )
 
@@ -552,7 +578,7 @@ def main() -> None:
     )
     scene_lines.append(
         f'          <Shape name="wheelFrontLeftDrive" nodeId="{next_nid()}" shapeId="{fl_sid}" materialIds="{fl_mats}" '
-        f'castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+        f'collision="false" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
     scene_lines.append("        </TransformGroup>")
     scene_lines.append(
@@ -560,17 +586,25 @@ def main() -> None:
     )
     scene_lines.append(
         f'          <Shape name="wheelFrontRightDrive" nodeId="{next_nid()}" shapeId="{fr_sid}" materialIds="{fr_mats}" '
-        f'castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+        f'collision="false" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
     scene_lines.append("        </TransformGroup>")
     scene_lines.append(
-        f'        <Shape name="wheelBackLeft" nodeId="{next_nid()}" shapeId="{rl_sid}" materialIds="{rl_mats}" '
-        f'translation="0.8059 0.3526 -1.4167" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+        f'        <TransformGroup name="wheelBackLeftRepr" nodeId="{next_nid()}" translation="0.8059 0.3526 -1.4167">'
     )
     scene_lines.append(
-        f'        <Shape name="wheelBackRight" nodeId="{next_nid()}" shapeId="{rr_sid}" materialIds="{rr_mats}" '
-        f'translation="-0.8165 0.3526 -1.4167" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+        f'          <Shape name="wheelBackLeft" nodeId="{next_nid()}" shapeId="{rl_sid}" materialIds="{rl_mats}" '
+        f'collision="false" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
     )
+    scene_lines.append("        </TransformGroup>")
+    scene_lines.append(
+        f'        <TransformGroup name="wheelBackRightRepr" nodeId="{next_nid()}" translation="-0.8165 0.3526 -1.4167">'
+    )
+    scene_lines.append(
+        f'          <Shape name="wheelBackRight" nodeId="{next_nid()}" shapeId="{rr_sid}" materialIds="{rr_mats}" '
+        f'collision="false" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+    )
+    scene_lines.append("        </TransformGroup>")
     scene_lines.append("      </TransformGroup>")
 
     # 0>1 cameras
@@ -627,7 +661,7 @@ def main() -> None:
         s_id, mats_str = wheel_shape_attrs(lname)
         scene_lines.append(
             f'          <Shape name="{escape(lname)}" nodeId="{next_nid()}" shapeId="{s_id}" '
-            f'materialIds="{mats_str}" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+            f'materialIds="{mats_str}" collision="false" castsShadows="false" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
         )
     scene_lines.append("        </TransformGroup>")
     scene_lines.append("      </TransformGroup>")
@@ -653,7 +687,7 @@ def main() -> None:
     sw_s_id, sw_mats_str = wheel_shape_attrs("steeringwheel")
     scene_lines.append(
         f'          <Shape name="steeringWheel" nodeId="{next_nid()}" shapeId="{sw_s_id}" '
-        f'materialIds="{sw_mats_str}" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300">'
+        f'materialIds="{sw_mats_str}" collision="false" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300">'
     )
     scene_lines.append(
         f'            <TransformGroup name="playerRightHandTarget" nodeId="{next_nid()}" translation="-0.155 0 0.02" rotation="0 0 -90"/>'
@@ -685,13 +719,13 @@ def main() -> None:
         s_id, mats_str = wheel_shape_attrs(vname)
         scene_lines.append(
             f'        <Shape name="{escape(vname)}" nodeId="{next_nid()}" shapeId="{s_id}" '
-            f'materialIds="{mats_str}" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
+            f'materialIds="{mats_str}" collision="false" castsShadows="true" receiveShadows="true" doubleSided="true" clipDistance="300"/>'
         )
     scene_lines.append("      </TransformGroup>")
-    # 0>7 fuel trigger
+    # 0>7 fuel trigger (unscaled CPU shapeId=2 to avoid PhysX runtime scale warning)
     scene_lines.append(
-        f'      <Shape name="exactFillRootNodeFuel" nodeId="{next_nid()}" shapeId="1" materialIds="1" '
-        f'translation="-0.75 0.78 -1.45" scale="0.25 0.25 0.25" kinematic="true" compound="true" '
+        f'      <Shape name="exactFillRootNodeFuel" nodeId="{next_nid()}" shapeId="2" materialIds="1" '
+        f'translation="-0.75 0.78 -1.45" kinematic="true" compound="true" collision="true" '
         f'collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" castsShadows="true" '
         f'receiveShadows="true" nonRenderable="true"/>'
     )
@@ -753,14 +787,16 @@ def main() -> None:
     for top_idx, top_child in enumerate(scene_elem):
         walk_scene(top_child, f"{top_idx}>")
 
-    # Select the 36 mapped nodes required by Contract Section 2.4
+    # Select the mapped nodes required by golG5.xml
     contract_node_keys = [
         "golG5_main_component1",
         "wheelFrontLeftRepr",
         "wheelFrontLeftDrive",
         "wheelFrontRightRepr",
         "wheelFrontRightDrive",
+        "wheelBackLeftRepr",
         "wheelBackLeft",
+        "wheelBackRightRepr",
         "wheelBackRight",
         "outdoorCameraTarget",
         "outdoorCamera1",

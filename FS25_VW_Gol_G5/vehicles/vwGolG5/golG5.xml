@@ -26,10 +26,10 @@
     <base>
         <typeDesc>$l10n_typeDesc_golG5</typeDesc>
         <filename>vehicles/vwGolG5/golG5.i3d</filename>
-        <sounds filename="$data/vehicles/skoda/kodiaq/sounds/kodiaq.xml"/>
+        <sounds filename="vehicles/vwGolG5/sounds/golG5.xml"/>
         <size width="2.15" length="4.40" height="1.85"/>
-        <components numComponents="1">
-            <component index="1" centerOfMass="0 0.45 0.15" mass="1010" inertiaScale="1 1 1" solverIterationCount="10" motorized="true"/>
+        <components>
+            <component centerOfMass="0 0.45 0.10" solverIterationCount="10" mass="1010"/>
         </components>
         <schemaOverlay attacherJointPosition="0 0" name="CAR"/>
         <mapHotspot type="CAR"/>
@@ -40,22 +40,26 @@
     <wheels>
         <wheelConfigurations>
             <wheelConfiguration name="$l10n_configuration_valueDefault" price="0">
-                <wheels autoRotateBackSpeed="2.4" hasSurfaceSounds="true">
+                <wheels autoRotateBackSpeed="2.5" hasSurfaceSounds="true">
                     <wheel isLeft="true" hasTireTracks="true" hasParticles="true">
-                        <physics repr="wheelFrontLeftRepr" driveNode="wheelFrontLeftDrive" rotSpeed="1" restLoad="0.32" radius="0.3526" width="0.21" mass="0.025" initialCompression="20" suspTravel="0.14" spring="28" damper="3.5" frictionScale="1.6" rotMin="-32" rotMax="32" tireType="street"/>
+                        <physics repr="wheelFrontLeftRepr" driveNode="wheelFrontLeftDrive" rotSpeed="1" restLoad="0.28" radius="0.3526" width="0.21" mass="0.025" forcePointRatio="0.2" initialCompression="28" suspTravel="0.10" spring="12" damper="1.5" frictionScale="2.5" maxLongStiffness="8" maxLatStiffness="100" maxLatStiffnessLoad="2" transRatio="1" tireType="street"/>
                     </wheel>
                     <wheel isLeft="false" hasTireTracks="true" hasParticles="true">
-                        <physics repr="wheelFrontRightRepr" driveNode="wheelFrontRightDrive" rotSpeed="1" restLoad="0.32" radius="0.3526" width="0.21" mass="0.025" initialCompression="20" suspTravel="0.14" spring="28" damper="3.5" frictionScale="1.6" rotMin="-32" rotMax="32" tireType="street"/>
+                        <physics repr="wheelFrontRightRepr" driveNode="wheelFrontRightDrive" rotSpeed="1" restLoad="0.28" radius="0.3526" width="0.21" mass="0.025" forcePointRatio="0.2" initialCompression="28" suspTravel="0.10" spring="12" damper="1.5" frictionScale="2.5" maxLongStiffness="8" maxLatStiffness="100" maxLatStiffnessLoad="2" transRatio="1" tireType="street"/>
                     </wheel>
                     <wheel isLeft="true" hasTireTracks="true" hasParticles="true">
-                        <physics repr="wheelBackLeft" rotSpeed="0" restLoad="0.22" radius="0.3526" width="0.21" mass="0.025" initialCompression="18" suspTravel="0.15" spring="24" damper="3.0" frictionScale="1.6" tireType="street"/>
+                        <physics repr="wheelBackLeftRepr" driveNode="wheelBackLeft" rotSpeed="0" restLoad="0.23" radius="0.3526" width="0.21" mass="0.025" forcePointRatio="0.2" initialCompression="28" suspTravel="0.10" spring="12" damper="1.5" frictionScale="2.5" maxLongStiffness="8" maxLatStiffness="100" maxLatStiffnessLoad="2" transRatio="1" tireType="street"/>
                     </wheel>
                     <wheel isLeft="false" hasTireTracks="true" hasParticles="true">
-                        <physics repr="wheelBackRight" rotSpeed="0" restLoad="0.22" radius="0.3526" width="0.21" mass="0.025" initialCompression="18" suspTravel="0.15" spring="24" damper="3.0" frictionScale="1.6" tireType="street"/>
+                        <physics repr="wheelBackRightRepr" driveNode="wheelBackRight" rotSpeed="0" restLoad="0.23" radius="0.3526" width="0.21" mass="0.025" forcePointRatio="0.2" initialCompression="28" suspTravel="0.10" spring="12" damper="1.5" frictionScale="2.5" maxLongStiffness="8" maxLatStiffness="100" maxLatStiffnessLoad="2" transRatio="1" tireType="street"/>
                     </wheel>
                 </wheels>
             </wheelConfiguration>
         </wheelConfigurations>
+
+        <ackermannSteeringConfigurations>
+            <ackermannSteering rotSpeed="35" rotMax="35" rotCenterWheel1="3" rotCenterWheel2="4"/>
+        </ackermannSteeringConfigurations>
     </wheels>
 
     <lights>
@@ -131,7 +135,7 @@
 
         <motorConfigurations>
             <motorConfiguration name="$l10n_configuration_motor_10vht" hp="76" maxSpeed="165" price="0" isDefault="true">
-                <motor torqueScale="0.14" minRpm="850" maxRpm="6200" maxForwardSpeed="165" maxBackwardSpeed="35" brakeForce="2.2" lowBrakeForceScale="0.22" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.25">
+                <motor torqueScale="0.14" minRpm="850" maxRpm="6200" maxForwardSpeed="165" maxBackwardSpeed="35" brakeForce="1.4" lowBrakeForceScale="0.15" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.08">
                     <torque normRpm="0.2" torque="0.65"/>
                     <torque normRpm="0.4" torque="0.88"/>
                     <torque normRpm="0.6" torque="1.00"/>
@@ -139,7 +143,7 @@
                     <torque normRpm="0.95" torque="0.82"/>
                     <torque normRpm="1.0" torque="0.68"/>
                 </motor>
-                <transmission axleRatio="4.78" name="$l10n_info_transmission_manual">
+                <transmission axleRatio="4.78" name="$l10n_golG5_transmission_manual">
                     <directionChange useGear="true" useGroup="false" changeTime="0.4"/>
                     <forwardGear gearRatio="3.45" name="1"/>
                     <forwardGear gearRatio="1.95" name="2"/>
@@ -151,7 +155,7 @@
             </motorConfiguration>
 
             <motorConfiguration name="$l10n_configuration_motor_16vht" hp="104" maxSpeed="190" price="3800">
-                <motor torqueScale="0.19" minRpm="850" maxRpm="6200" maxForwardSpeed="190" maxBackwardSpeed="40" brakeForce="2.5" lowBrakeForceScale="0.22" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.25">
+                <motor torqueScale="0.19" minRpm="850" maxRpm="6200" maxForwardSpeed="190" maxBackwardSpeed="40" brakeForce="1.6" lowBrakeForceScale="0.15" lowBrakeForceSpeedLimit="1" rotInertia="0.0012" dampingRateScale="0.08">
                     <torque normRpm="0.2" torque="0.72"/>
                     <torque normRpm="0.4" torque="0.95"/>
                     <torque normRpm="0.6" torque="1.00"/>
@@ -159,7 +163,7 @@
                     <torque normRpm="0.95" torque="0.80"/>
                     <torque normRpm="1.0" torque="0.66"/>
                 </motor>
-                <transmission axleRatio="4.06" name="$l10n_info_transmission_manual">
+                <transmission axleRatio="4.06" name="$l10n_golG5_transmission_manual">
                     <directionChange useGear="true" useGroup="false" changeTime="0.4"/>
                     <forwardGear gearRatio="3.45" name="1"/>
                     <forwardGear gearRatio="1.95" name="2"/>
@@ -171,7 +175,7 @@
             </motorConfiguration>
 
             <motorConfiguration name="$l10n_configuration_motor_16stage1" hp="125" maxSpeed="208" price="6500">
-                <motor torqueScale="0.23" minRpm="900" maxRpm="6500" maxForwardSpeed="208" maxBackwardSpeed="45" brakeForce="2.9" lowBrakeForceScale="0.22" lowBrakeForceSpeedLimit="1" rotInertia="0.0011" dampingRateScale="0.22">
+                <motor torqueScale="0.23" minRpm="900" maxRpm="6500" maxForwardSpeed="208" maxBackwardSpeed="45" brakeForce="1.8" lowBrakeForceScale="0.15" lowBrakeForceSpeedLimit="1" rotInertia="0.0011" dampingRateScale="0.07">
                     <torque normRpm="0.2" torque="0.76"/>
                     <torque normRpm="0.4" torque="0.97"/>
                     <torque normRpm="0.6" torque="1.00"/>
@@ -179,7 +183,7 @@
                     <torque normRpm="0.95" torque="0.89"/>
                     <torque normRpm="1.0" torque="0.75"/>
                 </motor>
-                <transmission axleRatio="4.06" name="$l10n_info_transmission_manual">
+                <transmission axleRatio="4.06" name="$l10n_golG5_transmission_manual">
                     <directionChange useGear="true" useGroup="false" changeTime="0.35"/>
                     <forwardGear gearRatio="3.45" name="1"/>
                     <forwardGear gearRatio="1.95" name="2"/>
@@ -239,8 +243,10 @@
         <i3dMapping id="wheelFrontLeftDrive" node="0>0|0|0"/>
         <i3dMapping id="wheelFrontRightRepr" node="0>0|1"/>
         <i3dMapping id="wheelFrontRightDrive" node="0>0|1|0"/>
-        <i3dMapping id="wheelBackLeft" node="0>0|2"/>
-        <i3dMapping id="wheelBackRight" node="0>0|3"/>
+        <i3dMapping id="wheelBackLeftRepr" node="0>0|2"/>
+        <i3dMapping id="wheelBackLeft" node="0>0|2|0"/>
+        <i3dMapping id="wheelBackRightRepr" node="0>0|3"/>
+        <i3dMapping id="wheelBackRight" node="0>0|3|0"/>
         <i3dMapping id="outdoorCameraTarget" node="0>1|0"/>
         <i3dMapping id="outdoorCamera1" node="0>1|0|0"/>
         <i3dMapping id="indoorCamera" node="0>1|1"/>

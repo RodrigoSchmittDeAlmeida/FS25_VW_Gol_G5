@@ -7,7 +7,7 @@
         <text name="configuration_motor_10vht" text="1.0 VHT (76 cv)"/>
         <text name="configuration_motor_16vht" text="1.6 VHT (104 cv)"/>
         <text name="configuration_motor_16stage1" text="1.6 VHT Stage 1 ME7.5.30 (125 cv)"/>
-        <text name="info_transmission_manual" text="Manual 5 Marchas (MQ200)"/>
+        <text name="golG5_transmission_manual" text="Manual 5 Marchas (MQ200)"/>
         <text name="color_vwNinjaBlack" text="Preto Ninja"/>
         <text name="color_vwCrystalWhite" text="Branco Cristal"/>
         <text name="color_vwSiriusSilver" text="Prata Sirius"/>

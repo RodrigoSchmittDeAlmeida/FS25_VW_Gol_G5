@@ -22,6 +22,8 @@ GITIGNORE_PATH = ROOT_DIR / ".gitignore"
 
 MODDESC_XSD_URL = "https://validation.gdn.giants-software.com/xml/fs25/modDesc.xsd"
 VEHICLE_XSD_URL = "https://validation.gdn.giants-software.com/xml/fs25/vehicle.xsd"
+VEHICLE_SOUNDS_XSD_URL = "https://validation.gdn.giants-software.com/xml/fs25/vehicle_sounds.xsd"
+LOCAL_SCHEMA_DIR = Path(r"C:\XboxGames\Farming Simulator 25 (PC)\Content\shared\xml\schema")
 
 EXPECTED_DDS = {
     "icon_golG5.dds": (256, 256),
@@ -61,25 +63,37 @@ def get_cached_xsd(filename: str, url: str) -> Path:
     return target
 
 
+def resolve_xsd(filename: str, url: str) -> Path:
+    local_xsd = LOCAL_SCHEMA_DIR / filename
+    if local_xsd.is_file():
+        return local_xsd
+    return get_cached_xsd(filename, url)
+
+
 def check_1_xsd() -> list[str]:
     errors: list[str] = []
     moddesc_xml = MOD_DIR / "modDesc.xml"
     vehicle_xml = MOD_DIR / "vehicles" / "vwGolG5" / "golG5.xml"
+    sounds_xml = MOD_DIR / "vehicles" / "vwGolG5" / "sounds" / "golG5.xml"
 
     if not moddesc_xml.is_file():
         return [f"Missing {moddesc_xml}"]
     if not vehicle_xml.is_file():
         return [f"Missing {vehicle_xml}"]
+    if not sounds_xml.is_file():
+        return [f"Missing {sounds_xml}"]
 
     try:
         moddesc_xsd = get_cached_xsd("modDesc.xsd", MODDESC_XSD_URL)
         vehicle_xsd = get_cached_xsd("vehicle.xsd", VEHICLE_XSD_URL)
+        sounds_xsd = resolve_xsd("vehicle_sounds.xsd", VEHICLE_SOUNDS_XSD_URL)
     except Exception as exc:
         return [f"Failed to fetch XSD schemas: {exc}"]
 
     for label, xml_path, xsd_path in [
         ("modDesc.xml", moddesc_xml, moddesc_xsd),
         ("golG5.xml", vehicle_xml, vehicle_xsd),
+        ("sounds/golG5.xml", sounds_xml, sounds_xsd),
     ]:
         try:
             lxml_schema = LET.XMLSchema(LET.parse(str(xsd_path)))
@@ -182,6 +196,14 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
     if root.get("version") != "1.6":
         errors.append(f"Expected I3D version='1.6', got {root.get('version')!r}")
 
+    local_i3d_xsd = LOCAL_SCHEMA_DIR / "i3d-1.6.xsd"
+    if local_i3d_xsd.is_file():
+        try:
+            i3d_schema = LET.XMLSchema(LET.parse(str(local_i3d_xsd)))
+            i3d_schema.assertValid(doc)
+        except Exception as exc:
+            errors.append(f"i3d-1.6.xsd validation failed: {exc}")
+
     file_ids: set[str] = set()
     for f in root.findall("./Files/File"):
         fid = f.get("fileId")
@@ -190,13 +212,14 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
 
     material_ids: set[str] = set()
     shader_material_ids: set[str] = set()
+    static_light_mat_ids: set[str] = set()
     carpaint_mat_id: str | None = None
     for mat in root.findall("./Materials/Material"):
         mid = mat.get("materialId")
         mname = mat.get("name", "")
         if mid:
             material_ids.add(mid)
-        if mname == "Mat_CarPaint_Black":
+        if mname == "carPaint":
             carpaint_mat_id = mid
         csid = mat.get("customShaderId")
         if csid:
@@ -204,6 +227,8 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
                 errors.append(f"Material {mname} ({mid}) references missing customShaderId={csid}")
             elif mid:
                 shader_material_ids.add(mid)
+                if mat.get("customShaderVariation") == "staticLight":
+                    static_light_mat_ids.add(mid)
         for tex_tag in ("Texture", "Emissivemap", "Normalmap", "Glossmap"):
             for child in mat.findall(f"./{tex_tag}"):
                 tfid = child.get("fileId")
@@ -281,9 +306,18 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
             if any(mid in shader_material_ids for mid in mids):
                 shader_shape_paths.add(path_str)
 
+            if sname in {"golG5_main_component1", "exactFillRootNodeFuel"}:
+                if shapes_by_id[sid].get("meshUsage") != "256":
+                    errors.append(f"Collision shape {sname} (shapeId={sid}) missing meshUsage='256' CPU mesh flag")
+
+            if any(mid in static_light_mat_ids for mid in mids):
+                verts_el = shapes_by_id[sid].find("./Vertices")
+                if verts_el is None or verts_el.get("uv1") != "true":
+                    errors.append(f"Static-light shape {sname} (shapeId={sid}) missing uv1='true' in <Vertices>")
+
             if sname in CARPAINT_SHAPES:
                 if carpaint_mat_id is None:
-                    errors.append("Mat_CarPaint_Black not found in <Materials>")
+                    errors.append("Material name='carPaint' not found in <Materials>")
                 else:
                     its = shapes_by_id[sid]
                     subsets = its.findall("./Subsets/Subset")
@@ -292,14 +326,10 @@ def check_3_i3d() -> tuple[list[str], dict[str, str], set[str]]:
                         if mid == carpaint_mat_id:
                             if idx >= len(subsets):
                                 errors.append(f"Shape {sname}: materialIds index {idx} has no matching Subset")
-                            elif subsets[idx].get("materialSlotName") != "carPaint":
-                                errors.append(
-                                    f"Shape {sname} subset {idx} (Mat_CarPaint_Black) missing materialSlotName='carPaint'"
-                                )
                             else:
                                 found_carpaint_subset = True
                     if not found_carpaint_subset:
-                        errors.append(f"Car-paint shape {sname} does not use Mat_CarPaint_Black with materialSlotName='carPaint'")
+                        errors.append(f"Car-paint shape {sname} does not reference carPaint materialId={carpaint_mat_id}")
 
     return errors, scene_paths, shader_shape_paths
 

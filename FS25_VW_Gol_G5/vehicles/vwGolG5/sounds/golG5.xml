@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<sounds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../shared/xml/schema/vehicle_sounds.xsd">
+    <motorized>
+        <sounds>
+            <motor template="engineSmall" file="$data/sounds/vehicles/engine/npc/npc_car_02_loop.wav" volumeScale="0.95" linkNodeOffset="0 0.75 1.45" innerRadius="2.5" outerRadius="45">
+                <volume indoor="0.45" outdoor="0.85">
+                    <modifier type="MOTOR_LOAD" value="0.0" modifiedValue="0.72"/>
+                    <modifier type="MOTOR_LOAD" value="0.5" modifiedValue="0.88"/>
+                    <modifier type="MOTOR_LOAD" value="1.0" modifiedValue="1.15"/>
+                </volume>
+                <pitch indoor="0.85" outdoor="0.85">
+                    <modifier type="MOTOR_RPM_REAL" value="800" modifiedValue="0.62"/>
+                    <modifier type="MOTOR_RPM_REAL" value="1500" modifiedValue="0.82"/>
+                    <modifier type="MOTOR_RPM_REAL" value="3000" modifiedValue="1.18"/>
+                    <modifier type="MOTOR_RPM_REAL" value="4800" modifiedValue="1.55"/>
+                    <modifier type="MOTOR_RPM_REAL" value="6500" modifiedValue="1.85"/>
+                </pitch>
+                <lowpassGain indoor="0.35" outdoor="1.0"/>
+            </motor>
+            <gearLeverStart template="gearDisengaged"/>
+            <gearLeverEnd template="gearEngaged"/>
+        </sounds>
+    </motorized>
+
+    <enterable>
+        <sounds>
+            <rain template="rainInVehicle" linkNodeOffset="0.35 1.25 0.05">
+                <loopSynthesisRpm>
+                    <modifier type="SPEED" value="0.0" modifiedValue="0.0"/>
+                    <modifier type="SPEED" value="80.0" modifiedValue="1.0"/>
+                </loopSynthesisRpm>
+                <volume>
+                    <modifier type="SPEED" value="0" modifiedValue="1.0"/>
+                    <modifier type="SPEED" value="25" modifiedValue="1.0"/>
+                    <modifier type="SPEED" value="80" modifiedValue="1.2"/>
+                </volume>
+                <pitch>
+                    <modifier type="SPEED" value="0" modifiedValue="1.0"/>
+                    <modifier type="SPEED" value="80" modifiedValue="1.0"/>
+                </pitch>
+            </rain>
+            <hail template="hailInVehicle" linkNodeOffset="0.35 1.25 0.05" volumeScale="1.2">
+                <loopSynthesisRpm>
+                    <modifier type="SPEED" value="0.0" modifiedValue="0.0"/>
+                    <modifier type="SPEED" value="80.0" modifiedValue="1.0"/>
+                </loopSynthesisRpm>
+                <volume>
+                    <modifier type="SPEED" value="0" modifiedValue="1.0"/>
+                    <modifier type="SPEED" value="80" modifiedValue="1.2"/>
+                </volume>
+                <pitch>
+                    <modifier type="SPEED" value="0" modifiedValue="1.0"/>
+                    <modifier type="SPEED" value="80" modifiedValue="1.0"/>
+                </pitch>
+            </hail>
+        </sounds>
+    </enterable>
+
+    <lights>
+        <sounds>
+            <toggleLights template="switch01"/>
+            <turnLight template="switchTurnlight"/>
+        </sounds>
+    </lights>
+
+    <attacherJoints>
+        <sounds>
+            <attach template="attach01"/>
+        </sounds>
+    </attacherJoints>
+
+    <drivable>
+        <sounds>
+            <waterSplash template="waterSplash01"/>
+        </sounds>
+    </drivable>
+
+    <honk>
+        <sound template="honkCar"/>
+    </honk>
+</sounds>
